@@ -9,16 +9,13 @@
   "bin": {
     "diversity-push": "./push.js"
   },
-  "repository": {
-    "type" : "git",
-    "url" : "https://github.com/Dervisevic/diversity-push"
-  },
+  "repository": "Dervisevic/diversity-push",
   "keywords": [
     "diversity",
     "git",
     "push",
     "semver"
   ],
-  "author": "Denis Dervisevic <denis@dervisevic.se>",
+  "author": "Denis Dervisevic <denis@dervisevic.se> (http://denisdervisevic.com)",
   "license": "MIT"
 }
