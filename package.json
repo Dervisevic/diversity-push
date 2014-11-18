@@ -1,6 +1,6 @@
 {
   "name": "diversity-push",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple script to update Diversity component version.",
   "main": "push.js",
   "scripts": {
@@ -17,5 +17,10 @@
     "semver"
   ],
   "author": "Denis Dervisevic <denis@dervisevic.se> (http://denisdervisevic.com)",
-  "license": "MIT"
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://raw.githubusercontent.com/Dervisevic/diversity-push/master/LICENSE"
+    }
+  ]
 }
