@@ -1,4 +1,5 @@
 #Diversity Push
+[![npm version](https://badge.fury.io/js/diversity-push.svg)](http://badge.fury.io/js/diversity-push)
 
 This is a simple node script for updating a [Diversity](https://diversity.io/) component.
 
