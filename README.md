@@ -7,5 +7,6 @@ Takes an argument, patch, minor or major. Updated the diversity.json file, commi
 
 ## Todo/Improvments
 * Remove automatic patch, must specify what you want to update
-* Do a git pull or something to avoid conflicts
-* Provide usage when no argument is submitted.
+* Add something like [commander](https://github.com/tj/commander.js), so it can provide help and take more robust arguments.
+* Arguments to do sub tasks as well. Something like only modify diversity.json etc. Will open up for more workflows.
+* Do a git pull or something to avoid conflicts.
