@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+`#!/usr/bin/env node`
 
 # Diversity Push <denis@dervisevic.se>
 # A simple node script to update the version of Diversity <https:#diversity.io/> components.
