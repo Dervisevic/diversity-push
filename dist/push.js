@@ -1,4 +1,4 @@
-#!/usr/bin/env node;
+#!/usr/bin/env node
 var askPush, command, diversityData, exec, finish, fs, newDiversity, newVersion, position, push, readDiversity, rls, runCommand, settings, shell, shouldPush, updateString, versionArray, versionNumber, writeDiversity;
 
 fs = require('fs');

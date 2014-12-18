@@ -1,19 +1,6 @@
-`#!/usr/bin/env node`
-
 # Diversity Push <denis@dervisevic.se>
 # A simple node script to update the version of Diversity <https:#diversity.io/> components.
-# Usage: Just run the npm command diversityPush from a components git archive with a single
-# argument, patch, minor, or major to update that part of the semver version string. If no argument
-# is supplied a patch update is assumed.
-#
-# push
-# .version('2.0.0')
-# .option('-p, --peppers', 'Add peppers')
-# .option('-P, --pineapple', 'Add pineapple')
-# .option('-b, --bbq', 'Add bbq sauce')
-# .option('-c, --cheese [type]', 'Add the specified type of cheese [marble]', 'marble')
-# .parse(process.argv);
-#
+# More info in readme
 
 fs    = require('fs');
 exec  = require('child_process').exec;
