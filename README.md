@@ -3,10 +3,7 @@
 
 This is a simple node script for updating a [Diversity](https://diversity.io/) component.
 
-Takes an argument, patch, minor or major. Updated the diversity.json file, commits it, tags it and pushes it. No argument is patch.
+2.0 now is integrated with git flow. It currently only performs one task, and that is the release workflow. The --release flag takes the patch, minor or major option and updated diversity.json and minifies the scripts via gulp.
+Midway through the process the user is prompted if he wants to finish the release, and if it's so another prompt is presented, whether to push or not.
 
-## Todo/Improvments
-* Remove automatic patch, must specify what you want to update
-* Add something like [commander](https://github.com/tj/commander.js), so it can provide help and take more robust arguments.
-* Arguments to do sub tasks as well. Something like only modify diversity.json etc. Will open up for more workflows.
-* Do a git pull or something to avoid conflicts.
+Commander provides help for options. All concerns previously listed have been adressed. 2.0 is also now written in coffeescript, this was done in an educational purpose. 
