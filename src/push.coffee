@@ -84,25 +84,21 @@ if push.release
 
     # Check if you should finish release
     askPush = false
-    finish = rls.question 'Would you like to finish the release? (n to cancel) : '
-    if finish.toLowerCase() is 'y' or finish is ''
+    finish = rls.question 'Would you like to finish the release? [Y/n]: '
+    if finish.toLowerCase() is 'n'
+      console.log "Don't forget to finish the release after you're done."
+    else
       askPush = true
       runCommand 'git flow release finish -m "' + newVersion + '" ' + newVersion
       console.log 'Finishing git flow release.'
-    else console.log "Don't forget to finish the release after you're done."
 
     if askPush
-      shouldPush = rls.question 'Would you like to push the release? (n to cancel): '
-      if shouldPush.toLowerCase() is 'y' or shouldPush is ''
+      shouldPush = rls.question 'Would you like to push the release? [Y/n]: '
+      if shouldPush.toLowerCase() is 'n'
+        console.log "Don't forget to push after you're done."
+      else
         runCommand 'git push --all && git push --tags'
         console.log 'Pushing release and tags.'
-      else console.log "Don't forget to push after you're done."
-    else console.log "Don't forget to push after you're done."
     console.log "Done!"
 else
   push.outputHelp()
-
-
-
-
-

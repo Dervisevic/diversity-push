@@ -81,24 +81,22 @@ if (push.release) {
   runCommand('git commit diversity.json scripts.min.js -m "' + updateString + ' and minified scripts."');
   console.log('Commited diversity.json and scripts.min.js');
   askPush = false;
-  finish = rls.question('Would you like to finish the release? (n to cancel) : ');
-  if (finish.toLowerCase() === 'y' || finish === '') {
+  finish = rls.question('Would you like to finish the release? [Y/n]: ');
+  if (finish.toLowerCase() === 'n') {
+    console.log("Don't forget to finish the release after you're done.");
+  } else {
     askPush = true;
     runCommand('git flow release finish -m "' + newVersion + '" ' + newVersion);
     console.log('Finishing git flow release.');
-  } else {
-    console.log("Don't forget to finish the release after you're done.");
   }
   if (askPush) {
-    shouldPush = rls.question('Would you like to push the release? (n to cancel): ');
-    if (shouldPush.toLowerCase() === 'y' || shouldPush === '') {
+    shouldPush = rls.question('Would you like to push the release? [Y/n]: ');
+    if (shouldPush.toLowerCase() === 'n') {
+      console.log("Don't forget to push after you're done.");
+    } else {
       runCommand('git push --all && git push --tags');
       console.log('Pushing release and tags.');
-    } else {
-      console.log("Don't forget to push after you're done.");
     }
-  } else {
-    console.log("Don't forget to push after you're done.");
   }
   console.log("Done!");
 } else {
