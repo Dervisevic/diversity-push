@@ -20,7 +20,6 @@ settings =
 push
   .version('2.0.0')
   .option('-r, --release [type]', 'Start up git flow release. Type can be major, minor or patch. Default is patch. Will not finish or push without asking.')
-  .option('-n, --noscripts', 'If it shouldn\'t commit the scripts file')
   .parse(process.argv);
 
 readDiversity = (path) ->
@@ -81,7 +80,7 @@ if push.release
 
     # Commit diversity.json scripts.min.js with message
     filelist = 'diversity.json'
-    if !push.noscripts
+    if fs.existsSync(process.cwd() + '/scripts.min.js')
       filelist += ' scripts.min.js'
 
     runCommand 'git commit ' + filelist + ' -m "' + updateString + ' and minified scripts."'

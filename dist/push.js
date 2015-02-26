@@ -22,7 +22,7 @@ settings = {
   jsonSpaces: 2
 };
 
-push.version('2.0.0').option('-r, --release [type]', 'Start up git flow release. Type can be major, minor or patch. Default is patch. Will not finish or push without asking.').option('-n, --noscripts', 'If it shouldn\'t commit the scripts file').parse(process.argv);
+push.version('2.0.0').option('-r, --release [type]', 'Start up git flow release. Type can be major, minor or patch. Default is patch. Will not finish or push without asking.').parse(process.argv);
 
 readDiversity = function(path) {
   return fs.readFileSync(path, settings.encoding, function(err, data) {
@@ -79,7 +79,7 @@ if (push.release) {
   runCommand('gulp minify');
   console.log('Minified to scripts.min.js.');
   filelist = 'diversity.json';
-  if (!push.noscripts) {
+  if (fs.existsSync(process.cwd() + '/scripts.min.js')) {
     filelist += ' scripts.min.js';
   }
   runCommand('git commit ' + filelist + ' -m "' + updateString + ' and minified scripts."');
