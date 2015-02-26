@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var askPush, command, diversityData, exec, finish, fs, newDiversity, newVersion, position, push, readDiversity, rls, runCommand, settings, shell, shouldPush, updateString, versionArray, versionNumber, writeDiversity;
+var askPush, command, diversityData, exec, filelist, finish, fs, newDiversity, newVersion, position, push, readDiversity, rls, runCommand, settings, shell, shouldPush, updateString, versionArray, versionNumber, writeDiversity;
 
 fs = require('fs');
 
@@ -22,7 +22,7 @@ settings = {
   jsonSpaces: 2
 };
 
-push.version('2.0.0').option('-r, --release [type]', 'Start up git flow release. Type can be major, minor or patch. Default is patch. Will not finish or push without asking.').parse(process.argv);
+push.version('2.0.0').option('-r, --release [type]', 'Start up git flow release. Type can be major, minor or patch. Default is patch. Will not finish or push without asking.').option('-n, --noscripts', 'If it shouldn\'t commit the scripts file').parse(process.argv);
 
 readDiversity = function(path) {
   return fs.readFileSync(path, settings.encoding, function(err, data) {
@@ -78,7 +78,11 @@ if (push.release) {
   console.log('Starting to minify, may take a few moments...');
   runCommand('gulp minify');
   console.log('Minified to scripts.min.js.');
-  runCommand('git commit diversity.json scripts.min.js -m "' + updateString + ' and minified scripts."');
+  filelist = 'diversity.json';
+  if (!push.noscripts) {
+    filelist += ' scripts.min.js';
+  }
+  runCommand('git commit ' + filelist + ' -m "' + updateString + ' and minified scripts."');
   console.log('Commited diversity.json and scripts.min.js');
   askPush = false;
   finish = rls.question('Would you like to finish the release? [Y/n]: ');
