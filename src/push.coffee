@@ -7,7 +7,6 @@ exec  = require('child_process').exec;
 push  = require('commander');
 rls   = require('readline-sync');
 shell = require('shelljs');
-karma = require('karma').server
 
 if not shell.which 'git'
   shell.echo 'Sorry, this script requires git'

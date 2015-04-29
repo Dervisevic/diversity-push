@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var askPush, command, diversityData, exec, filelist, finish, fs, gitPullBranch, karma, karmaConfPath, karmaTestsExist, newDiversity, newVersion, position, push, readDiversity, rls, runCommand, settings, shell, shouldPush, skipKarmaTests, updateString, versionArray, versionNumber, writeDiversity;
+var askPush, command, diversityData, exec, filelist, finish, fs, gitPullBranch, karmaConfPath, karmaTestsExist, newDiversity, newVersion, position, push, readDiversity, rls, runCommand, settings, shell, shouldPush, skipKarmaTests, updateString, versionArray, versionNumber, writeDiversity;
 
 fs = require('fs');
 
@@ -10,8 +10,6 @@ push = require('commander');
 rls = require('readline-sync');
 
 shell = require('shelljs');
-
-karma = require('karma').server;
 
 if (!shell.which('git')) {
   shell.echo('Sorry, this script requires git');
