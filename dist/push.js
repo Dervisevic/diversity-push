@@ -59,6 +59,8 @@ gitPullBranch = function(branch) {
 };
 
 if (push.release) {
+  console.log('Stashing any non-committed changes:');
+  runCommand('git stash');
   gitPullBranch('master');
   gitPullBranch('develop');
   karmaConfPath = process.cwd() + '/test/karma.conf.js';

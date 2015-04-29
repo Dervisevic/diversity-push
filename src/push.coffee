@@ -47,6 +47,9 @@ gitPullBranch = (branch) ->
 
 
 if push.release
+    console.log 'Stashing any non-committed changes:'
+    runCommand 'git stash'
+
     # Check out master and develop and make sure they are up-to-date with origin
     gitPullBranch 'master'
     gitPullBranch 'develop'
