@@ -7,6 +7,7 @@ exec  = require('child_process').exec;
 push  = require('commander');
 rls   = require('readline-sync');
 shell = require('shelljs');
+karma = require('karma').server
 
 if not shell.which 'git'
   shell.echo 'Sorry, this script requires git'
@@ -37,8 +38,34 @@ runCommand = (command) ->
     shell.echo 'Error: ' + command + ' failed. Exiting.'
     shell.exit 1
 
+gitPullBranch = (branch) ->
+  runCommand 'git checkout ' + branch
+  if shell.exec('git pull').code != 0
+    runCommand 'git reset --hard'
+    shell.echo 'Error: master could not be automatically merged with origin/master. Please update master and try again'
+    shell.exit(1)
+
+
 
 if push.release
+    # Check out master and develop and make sure they are up-to-date with origin
+    gitPullBranch 'master'
+    gitPullBranch 'develop'
+
+    # Run karma tests, if they exist
+    karmaConfPath = process.cwd() + '/test/karma.conf.js'
+    karmaTestsExist = fs.existsSync karmaConfPath
+
+    if not karmaTestsExist
+      skipKarmaTests = rls.question 'Could not find any karma tests, do you want to proceed without running tests? [Y/n]: '
+
+    if skipKarmaTests?.toLowerCase() is 'n'
+      console.log "Release canceled."
+      shell.exit 1
+
+    if karmaTestsExist
+      runCommand 'gulp karma:single-run'
+
     diversityData = JSON.parse readDiversity(settings.diversityPath)
     versionArray = diversityData.version.split '.'
 

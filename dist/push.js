@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var askPush, command, diversityData, exec, filelist, finish, fs, newDiversity, newVersion, position, push, readDiversity, rls, runCommand, settings, shell, shouldPush, updateString, versionArray, versionNumber, writeDiversity;
+var askPush, command, diversityData, exec, filelist, finish, fs, gitPullBranch, karma, karmaConfPath, karmaTestsExist, newDiversity, newVersion, position, push, readDiversity, rls, runCommand, settings, shell, shouldPush, skipKarmaTests, updateString, versionArray, versionNumber, writeDiversity;
 
 fs = require('fs');
 
@@ -10,6 +10,8 @@ push = require('commander');
 rls = require('readline-sync');
 
 shell = require('shelljs');
+
+karma = require('karma').server;
 
 if (!shell.which('git')) {
   shell.echo('Sorry, this script requires git');
@@ -49,7 +51,30 @@ runCommand = function(command) {
   }
 };
 
+gitPullBranch = function(branch) {
+  runCommand('git checkout ' + branch);
+  if (shell.exec('git pull').code !== 0) {
+    runCommand('git reset --hard');
+    shell.echo('Error: master could not be automatically merged with origin/master. Please update master and try again');
+    return shell.exit(1);
+  }
+};
+
 if (push.release) {
+  gitPullBranch('master');
+  gitPullBranch('develop');
+  karmaConfPath = process.cwd() + '/test/karma.conf.js';
+  karmaTestsExist = fs.existsSync(karmaConfPath);
+  if (!karmaTestsExist) {
+    skipKarmaTests = rls.question('Could not find any karma tests, do you want to proceed without running tests? [Y/n]: ');
+  }
+  if ((skipKarmaTests != null ? skipKarmaTests.toLowerCase() : void 0) === 'n') {
+    console.log("Release canceled.");
+    shell.exit(1);
+  }
+  if (karmaTestsExist) {
+    runCommand('gulp karma:single-run');
+  }
   diversityData = JSON.parse(readDiversity(settings.diversityPath));
   versionArray = diversityData.version.split('.');
   command = push.release === true ? 'patch' : push.release;
