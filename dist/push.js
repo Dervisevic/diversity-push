@@ -65,15 +65,14 @@ if (push.release) {
   gitPullBranch('develop');
   karmaConfPath = process.cwd() + '/test/karma.conf.js';
   karmaTestsExist = fs.existsSync(karmaConfPath);
-  if (!karmaTestsExist) {
-    skipKarmaTests = rls.question('Could not find any karma tests, do you want to proceed without running tests? [Y/n]: ');
-  }
+  skipKarmaTests = rls.question('Do you want to proceed without running tests? [Y/n]: ');
   if ((skipKarmaTests != null ? skipKarmaTests.toLowerCase() : void 0) === 'n') {
-    console.log("Release canceled.");
-    shell.exit(1);
-  }
-  if (karmaTestsExist) {
-    runCommand('gulp karma:single-run');
+    if (karmaTestsExist) {
+      runCommand('gulp karma:single-run');
+    } else {
+      console.log("Could not find karma conf path.");
+      shell.exit(1);
+    }
   }
   diversityData = JSON.parse(readDiversity(settings.diversityPath));
   versionArray = diversityData.version.split('.');
