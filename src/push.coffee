@@ -66,6 +66,7 @@ if push.release
         console.log "Could not find karma conf path."
         shell.exit 1
 
+    runCommand 'gulp lint-style-names'
 
     diversityData = JSON.parse readDiversity(settings.diversityPath)
     versionArray = diversityData.version.split '.'
