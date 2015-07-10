@@ -1,5 +1,5 @@
 # Diversity Push <denis@dervisevic.se>
-# A simple node script to update the version of Diversity <https:#diversity.io/> components.
+# A simple node script to update the version of Diversity <https://diversity.io/> components.
 # More info in readme
 
 fs    = require('fs');
@@ -56,16 +56,10 @@ if push.release
 
     # Run karma tests, if they exist
     karmaConfPath = process.cwd() + '/test/karma.conf.js'
-    karmaTestsExist = fs.existsSync karmaConfPath
-    skipKarmaTests = rls.question 'Do you want to proceed without running tests? [Y/n]: '
 
-    if skipKarmaTests?.toLowerCase() is 'n'
-      if karmaTestsExist
-        runCommand 'gulp karma:single-run'
-      else
-        console.log "Could not find karma conf path."
-        shell.exit 1
-
+    skipKarmaTests = rls.question 'Do you want to run the tests? [Y/n]: '
+    if skipKarmaTests?.toLowerCase() isnt 'n'
+      runCommand 'gulp karma:single-run'
 
     diversityData = JSON.parse readDiversity(settings.diversityPath)
     versionArray = diversityData.version.split '.'
