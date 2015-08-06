@@ -67,6 +67,12 @@ if push.release
         shell.exit 1
 
 
+    # Run protractor tests?
+    runProtractorTests = rls.question 'Do you want to run the protractor tests? [Y/n]: '
+    if runProtractorTests?.toLowerCase() isnt 'n'
+      runCommand 'gulp protractor:single-run'
+      
+  
     diversityData = JSON.parse readDiversity(settings.diversityPath)
     versionArray = diversityData.version.split '.'
 
