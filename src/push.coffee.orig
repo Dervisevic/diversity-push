@@ -56,16 +56,14 @@ if push.release
 
     # Run karma tests, if they exist
     karmaConfPath = process.cwd() + '/test/karma.conf.js'
-    karmaTestsExist = fs.existsSync karmaConfPath
-    skipKarmaTests = rls.question 'Do you want to proceed without running tests? [Y/n]: '
 
-    if skipKarmaTests?.toLowerCase() is 'n'
-      if karmaTestsExist
-        runCommand 'gulp karma:single-run'
-      else
-        console.log "Could not find karma conf path."
-        shell.exit 1
-
+<<<<<<< HEAD
+    runCommand 'gulp lint-style-names'
+=======
+    skipKarmaTests = rls.question 'Do you want to run the tests? [Y/n]: '
+    if skipKarmaTests?.toLowerCase() isnt 'n'
+      runCommand 'gulp karma:single-run'
+>>>>>>> patch-2
 
     diversityData = JSON.parse readDiversity(settings.diversityPath)
     versionArray = diversityData.version.split '.'
