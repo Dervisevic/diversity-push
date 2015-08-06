@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var askPush, command, diversityData, exec, filelist, finish, fs, gitPullBranch, karmaConfPath, karmaTestsExist, newDiversity, newVersion, position, push, readDiversity, rls, runCommand, settings, shell, shouldPush, skipKarmaTests, updateString, versionArray, versionNumber, writeDiversity;
+var askPush, command, diversityData, exec, filelist, finish, fs, gitPullBranch, newDiversity, newVersion, position, push, readDiversity, rls, runCommand, runTest, settings, shell, shouldPush, updateString, versionArray, versionNumber, writeDiversity;
 
 fs = require('fs');
 
@@ -22,7 +22,14 @@ settings = {
   jsonSpaces: 2
 };
 
-push.version('2.0.0').option('-r, --release [type]', 'Start up git flow release. Type can be major, minor or patch. Default is patch. Will not finish or push without asking.').parse(process.argv);
+push.version((function() {
+  var packageJson, packagePath;
+  packagePath = __dirname + '/../package.json';
+  packageJson = JSON.parse(fs.readFileSync(packagePath, {
+    encoding: 'utf8'
+  }));
+  return packageJson.version;
+})()).option('-r, --release [type]', 'Start up git flow release. Type can be major, minor or patch. Default is patch. Will not finish or push without asking.').parse(process.argv);
 
 readDiversity = function(path) {
   return fs.readFileSync(path, settings.encoding, function(err, data) {
@@ -49,6 +56,16 @@ runCommand = function(command) {
   }
 };
 
+runTest = function(command) {
+  var question;
+  if ((shell.exec(command)).code !== 0) {
+    question = "\"" + command + "\" failed, do you want to abort the release and fix this? [Y/n]:";
+    if (rls.question(question) !== 'n') {
+      return shell.exit(0);
+    }
+  }
+};
+
 gitPullBranch = function(branch) {
   runCommand('git checkout ' + branch);
   if (shell.exec('git pull').code !== 0) {
@@ -63,17 +80,12 @@ if (push.release) {
   runCommand('git stash');
   gitPullBranch('master');
   gitPullBranch('develop');
-  karmaConfPath = process.cwd() + '/test/karma.conf.js';
-  karmaTestsExist = fs.existsSync(karmaConfPath);
-  skipKarmaTests = rls.question('Do you want to proceed without running tests? [Y/n]: ');
-  if ((skipKarmaTests != null ? skipKarmaTests.toLowerCase() : void 0) === 'n') {
-    if (karmaTestsExist) {
-      runCommand('gulp karma:single-run');
-    } else {
-      console.log("Could not find karma conf path.");
-      shell.exit(1);
-    }
-  }
+  runTest('gulp jscs');
+  runTest('gulp jshint');
+  runTest('gulp lint-css:style-names');
+  runTest('gulp lint-css:doiuse');
+  runTest('gulp karma:single-run');
+  runTest('gulp protractor:single-run');
   diversityData = JSON.parse(readDiversity(settings.diversityPath));
   versionArray = diversityData.version.split('.');
   command = push.release === true ? 'patch' : push.release;
