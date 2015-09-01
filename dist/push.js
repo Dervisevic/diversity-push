@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var askPush, command, diversityData, exec, filelist, finish, fs, gitPullBranch, newDiversity, newVersion, position, push, readDiversity, rls, runCommand, runTest, settings, shell, shouldPush, updateString, versionArray, versionNumber, writeDiversity;
+var askPush, command, dirty, diversityData, exec, filelist, finish, fs, gitPullBranch, newDiversity, newVersion, position, push, readDiversity, rls, runCommand, runTest, settings, shell, shouldPush, updateString, versionArray, versionNumber, writeDiversity;
 
 fs = require('fs');
 
@@ -87,6 +87,12 @@ if (push.release) {
   runTest('gulp translations-update-fail-on-incomplete');
   runTest('gulp protractor:single-run');
   runTest('gulp karma:single-run');
+  runCommand('git checkout scripts.min.js');
+  dirty = runCommand('expr $(git status --porcelain 2>/dev/null| egrep "^(M| M)" | wc -l)').output;
+  if (dirty) {
+    console.log('You have unstaged changes that you must take care of. Fix and commit this and then run diversity-push again.');
+    shell.exit(1);
+  }
   diversityData = JSON.parse(readDiversity(settings.diversityPath));
   versionArray = diversityData.version.split('.');
   command = push.release === true ? 'patch' : push.release;
