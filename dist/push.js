@@ -87,8 +87,10 @@ if (push.release) {
   runTest('gulp translations-update-fail-on-incomplete');
   runTest('gulp protractor:single-run');
   runTest('gulp karma:single-run');
-  runCommand('git checkout scripts.min.js');
-  dirty = runCommand('expr $(git status --porcelain 2>/dev/null| egrep "^(M| M)" | wc -l)').output;
+  if (fs.existsSync('scripts.min.js')) {
+    runCommand('git checkout scripts.min.js');
+  }
+  dirty = shell.exec('expr $(git status --porcelain 2>/dev/null| egrep "^(M| M)" | wc -l)').output;
   if (dirty) {
     console.log('You have unstaged changes that you must take care of. Fix and commit this and then run diversity-push again.');
     shell.exit(1);
