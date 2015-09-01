@@ -91,7 +91,7 @@ if (push.release) {
     runCommand('git checkout scripts.min.js');
   }
   dirty = shell.exec('expr $(git status --porcelain 2>/dev/null| egrep "^(M| M)" | wc -l)').output;
-  if (dirty) {
+  if (parseInt(dirty)) {
     console.log('You have unstaged changes that you must take care of. Fix and commit this and then run diversity-push again.');
     shell.exit(1);
   }
