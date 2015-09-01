@@ -67,7 +67,7 @@ if push.release
     runTest 'gulp jshint'
     runTest 'gulp lint-css:style-names'
     runTest 'gulp lint-css:doiuse'
-    runTest 'gulp translations-update-fail-on-incomplet'
+    runTest 'gulp translations-update-fail-on-incomplete'
     runTest 'gulp protractor:single-run'
     runTest 'gulp karma:single-run'
     
