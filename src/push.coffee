@@ -78,7 +78,7 @@ if push.release
     # Are there changes in working tree? Than abort and ask the user to fix things.
     # Get number of total uncommited files
     dirty = shell.exec('expr $(git status --porcelain 2>/dev/null| egrep "^(M| M)" | wc -l)').output
-    if dirty
+    if parseInt dirty
       console.log 'You have unstaged changes that you must take care of. Fix and commit this and then run diversity-push again.'
       shell.exit 1
 
@@ -104,7 +104,7 @@ if push.release
     newVersion = versionArray.join '.'
 
     diversityData.version = newVersion;
-    newDiversity = JSON.stringify(diversityData, null, settings.jsonSpaces);
+    newDiversity = JSON.stringify(diversityData, null, settings.jsonSpaces) + '\n';
     updateString = 'Bumped ' + command + ' version to ' + newVersion + '.'
     console.log updateString + ' Proceeding.'
 

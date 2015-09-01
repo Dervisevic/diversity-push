@@ -113,7 +113,7 @@ if (push.release) {
   versionArray[position] = versionNumber.toString();
   newVersion = versionArray.join('.');
   diversityData.version = newVersion;
-  newDiversity = JSON.stringify(diversityData, null, settings.jsonSpaces);
+  newDiversity = JSON.stringify(diversityData, null, settings.jsonSpaces) + '\n';
   updateString = 'Bumped ' + command + ' version to ' + newVersion + '.';
   console.log(updateString + ' Proceeding.');
   runCommand('git flow release start ' + newVersion);
