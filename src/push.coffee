@@ -1,5 +1,5 @@
 # Diversity Push <denis@dervisevic.se>
-# A simple node script to update the version of Diversity <https:#diversity.io/> components.
+# A simple node script to update the version of Diversity <https://diversity.io/> components.
 # More info in readme
 
 fs    = require('fs');
@@ -18,7 +18,10 @@ settings =
   jsonSpaces: 2, # Amount of spaces for indentation in output file (can also be \t)
 
 push
-  .version('2.0.0')
+  .version do ->
+    packagePath = __dirname + '/../package.json'
+    packageJson = JSON.parse fs.readFileSync(packagePath, {encoding: 'utf8'})
+    packageJson.version
   .option('-r, --release [type]', 'Start up git flow release. Type can be major, minor or patch. Default is patch. Will not finish or push without asking.')
   .parse(process.argv);
 
@@ -37,13 +40,18 @@ runCommand = (command) ->
     shell.echo 'Error: ' + command + ' failed. Exiting.'
     shell.exit 1
 
+runTest = (command) ->
+  if (shell.exec command).code != 0
+    question = """"#{command}" failed, do you want to abort the release and fix this? [Y/n]:"""
+    if rls.question(question) != 'n'
+      shell.exit 0
+
 gitPullBranch = (branch) ->
   runCommand 'git checkout ' + branch
   if shell.exec('git pull').code != 0
     runCommand 'git reset --hard'
     shell.echo 'Error: master could not be automatically merged with origin/master. Please update master and try again'
-    shell.exit(1)
-
+    shell.exit 1
 
 
 if push.release
@@ -54,19 +62,24 @@ if push.release
     gitPullBranch 'master'
     gitPullBranch 'develop'
 
-    # Run karma tests, if they exist
-    karmaConfPath = process.cwd() + '/test/karma.conf.js'
-    karmaTestsExist = fs.existsSync karmaConfPath
-
-    if not karmaTestsExist
-      skipKarmaTests = rls.question 'Could not find any karma tests, do you want to proceed without running tests? [Y/n]: '
-
-    if skipKarmaTests?.toLowerCase() is 'n'
-      console.log "Release canceled."
+    # Run tests and lint tools
+    runTest 'gulp jscs'
+    runTest 'gulp jshint'
+    runTest 'gulp lint-css:style-names'
+    runTest 'gulp lint-css:doiuse'
+    runTest 'gulp translations-update-fail-on-incomplete'
+    runTest 'gulp protractor:single-run'
+    runTest 'gulp karma:single-run'
+    
+    # Restore scripts.min.js
+    runCommand 'git checkout scripts.min.js'
+    
+    # Are there changes in working tree? Than abort and ask the user to fix things. 
+    # Get number of total uncommited files
+    dirty = runCommand('expr $(git status --porcelain 2>/dev/null| egrep "^(M| M)" | wc -l)').output
+    if dirty
+      console.log 'You have unstaged changes that you must take care of. Fix and commit this and then run diversity-push again.'
       shell.exit 1
-
-    if karmaTestsExist
-      runCommand 'gulp karma:single-run'
 
     diversityData = JSON.parse readDiversity(settings.diversityPath)
     versionArray = diversityData.version.split '.'
