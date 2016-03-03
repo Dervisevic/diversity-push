@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var askPush, command, dirty, diversityData, exec, filelist, finish, fs, gitPullBranch, newDiversity, newVersion, position, push, readDiversity, rls, runCommand, runTest, settings, shell, shouldPush, updateString, versionArray, versionNumber, writeDiversity;
+var askPush, command, dirty, diversityData, e, exec, filelist, finish, fs, gitPullBranch, newDiversity, newVersion, position, push, readDiversity, rls, runCommand, runTest, settings, shell, shouldPush, updateString, versionArray, versionNumber, writeDiversity;
 
 fs = require('fs');
 
@@ -80,7 +80,13 @@ if (push.release) {
   runCommand('git stash');
   gitPullBranch('master');
   gitPullBranch('develop');
-  runTest('gulp jscs');
+  try {
+    fs.statSync('.jscsrc');
+    runTest('gulp jscs');
+  } catch (_error) {
+    e = _error;
+    shell.echo('INFO: Skipping JSCS. No .jscsrc file found.');
+  }
   runTest('gulp jshint');
   runTest('gulp lint-css:style-names');
   runTest('gulp lint-css:doiuse');
@@ -91,7 +97,7 @@ if (push.release) {
     runCommand('git checkout scripts.min.js');
   }
   dirty = shell.exec('expr $(git status --porcelain 2>/dev/null| egrep "^(M| M)" | wc -l)').output;
-  if (dirty) {
+  if (parseInt(dirty)) {
     console.log('You have unstaged changes that you must take care of. Fix and commit this and then run diversity-push again.');
     shell.exit(1);
   }
@@ -123,6 +129,9 @@ if (push.release) {
   console.log('Starting to minify, may take a few moments...');
   runCommand('gulp minify');
   console.log('Minified to scripts.min.js.');
+  console.log('Running the "release" task...');
+  runCommand('gulp release');
+  console.log('..."release" task done!');
   filelist = 'diversity.json';
   if (fs.existsSync(process.cwd() + '/scripts.min.js')) {
     filelist += ' scripts.min.js';
