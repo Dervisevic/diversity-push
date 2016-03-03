@@ -63,7 +63,11 @@ if push.release
     gitPullBranch 'develop'
 
     # Run tests and lint tools
-    runTest 'gulp jscs'
+    try
+      fs.statSync '.jscsrc'
+      runTest 'gulp jscs'
+    catch e
+      shell.echo 'INFO: Skipping JSCS. No .jscsrc file found.'
     runTest 'gulp jshint'
     runTest 'gulp lint-css:style-names'
     runTest 'gulp lint-css:doiuse'
@@ -120,6 +124,11 @@ if push.release
     console.log 'Starting to minify, may take a few moments...'
     runCommand 'gulp minify'
     console.log 'Minified to scripts.min.js.'
+
+    # Run the custom 'release' task
+    console.log 'Running the "release" task...'
+    runCommand 'gulp release'
+    console.log '..."release" task done!'
 
     # Commit diversity.json scripts.min.js with message
     filelist = 'diversity.json'
