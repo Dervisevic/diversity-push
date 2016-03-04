@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var askPush, command, dirty, diversityData, e, exec, filelist, finish, fs, gitPullBranch, newDiversity, newVersion, position, push, readDiversity, rls, runCommand, runTest, settings, shell, shouldPush, updateString, versionArray, versionNumber, writeDiversity;
+var askPush, command, dirty, diversityData, error, exec, filelist, finish, fs, gitPullBranch, newDiversity, newVersion, position, push, readDiversity, rls, runCommand, runTest, settings, shell, shouldPush, updateString, versionArray, versionNumber, writeDiversity;
 
 fs = require('fs');
 
@@ -83,8 +83,7 @@ if (push.release) {
   try {
     fs.statSync('.jscsrc');
     runTest('gulp jscs');
-  } catch (_error) {
-    e = _error;
+  } catch (error) {
     shell.echo('INFO: Skipping JSCS. No .jscsrc file found.');
   }
   runTest('gulp jshint');

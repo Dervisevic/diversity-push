@@ -66,7 +66,7 @@ if push.release
     try
       fs.statSync '.jscsrc'
       runTest 'gulp jscs'
-    catch e
+    catch
       shell.echo 'INFO: Skipping JSCS. No .jscsrc file found.'
     runTest 'gulp jshint'
     runTest 'gulp lint-css:style-names'
