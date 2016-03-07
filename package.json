@@ -1,6 +1,6 @@
 {
   "name": "diversity-push",
-  "version": "2.5.3",
+  "version": "2.6.0",
   "description": "Simple script to update Diversity component version. Now enabled for git flow.",
   "main": "./dist/push.js",
   "scripts": {
