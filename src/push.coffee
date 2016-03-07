@@ -125,18 +125,18 @@ if push.release
     runCommand 'gulp minify'
     console.log 'Minified to scripts.min.js.'
 
-    # Run the custom 'release' task
-    console.log 'Running the "release" task...'
-    runCommand 'gulp release'
-    console.log '..."release" task done!'
-
     # Commit diversity.json scripts.min.js with message
     filelist = 'diversity.json'
     if fs.existsSync(process.cwd() + '/scripts.min.js')
       filelist += ' scripts.min.js'
 
-    runCommand 'git commit ' + filelist + ' -m "' + updateString + ' and minified scripts."'
-    console.log 'Commited diversity.json and scripts.min.js'
+      runCommand 'git commit ' + filelist + ' -m "' + updateString + ' and minified scripts."'
+      console.log 'Commited diversity.json and scripts.min.js'
+
+    # Run the custom 'release' task
+    console.log 'Running the "release" task...'
+    runCommand 'gulp release'
+    console.log '..."release" task done!'
 
     # Check if you should finish release
     askPush = false

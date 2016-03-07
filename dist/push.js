@@ -128,15 +128,15 @@ if (push.release) {
   console.log('Starting to minify, may take a few moments...');
   runCommand('gulp minify');
   console.log('Minified to scripts.min.js.');
-  console.log('Running the "release" task...');
-  runCommand('gulp release');
-  console.log('..."release" task done!');
   filelist = 'diversity.json';
   if (fs.existsSync(process.cwd() + '/scripts.min.js')) {
     filelist += ' scripts.min.js';
+    runCommand('git commit ' + filelist + ' -m "' + updateString + ' and minified scripts."');
+    console.log('Commited diversity.json and scripts.min.js');
   }
-  runCommand('git commit ' + filelist + ' -m "' + updateString + ' and minified scripts."');
-  console.log('Commited diversity.json and scripts.min.js');
+  console.log('Running the "release" task...');
+  runCommand('gulp release');
+  console.log('..."release" task done!');
   askPush = false;
   finish = rls.question('Would you like to finish the release? [Y/n]: ');
   if (finish.toLowerCase() === 'n') {
