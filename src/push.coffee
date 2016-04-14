@@ -23,6 +23,7 @@ push
     packageJson = JSON.parse fs.readFileSync(packagePath, {encoding: 'utf8'})
     packageJson.version
   .option('-r, --release [type]', 'Start up git flow release. Type can be major, minor or patch. Default is patch. Will not finish or push without asking.')
+  .option('-j, --just-release', 'Just do the release part of the flow.')
   .parse(process.argv);
 
 readDiversity = (path) ->
@@ -63,17 +64,20 @@ if push.release
     gitPullBranch 'develop'
 
     # Run tests and lint tools
-    try
-      fs.statSync '.jscsrc'
-      runTest 'gulp jscs'
-    catch
-      shell.echo 'INFO: Skipping JSCS. No .jscsrc file found.'
-    runTest 'gulp jshint'
-    runTest 'gulp lint-css:style-names'
-    runTest 'gulp lint-css:doiuse'
-    runTest 'gulp translations-update-fail-on-incomplete'
-    runTest 'gulp protractor:single-run'
-    runTest 'gulp karma:single-run'
+    if not push.justRelease
+      try
+        fs.statSync '.jscsrc'
+        runTest 'gulp jscs'
+      catch
+        shell.echo 'INFO: Skipping JSCS. No .jscsrc file found.'
+      runTest 'gulp jshint'
+      runTest 'gulp lint-css:style-names'
+      runTest 'gulp lint-css:doiuse'
+      runTest 'gulp translations-update-fail-on-incomplete'
+      runTest 'gulp protractor:single-run'
+      runTest 'gulp karma:single-run'
+    else
+      console.log 'Just doing a release.'
 
     # Restore scripts.min.js
     if fs.existsSync 'scripts.min.js'

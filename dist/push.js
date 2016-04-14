@@ -29,7 +29,7 @@ push.version((function() {
     encoding: 'utf8'
   }));
   return packageJson.version;
-})()).option('-r, --release [type]', 'Start up git flow release. Type can be major, minor or patch. Default is patch. Will not finish or push without asking.').parse(process.argv);
+})()).option('-r, --release [type]', 'Start up git flow release. Type can be major, minor or patch. Default is patch. Will not finish or push without asking.').option('-j, --just-release', 'Just do the release part of the flow.').parse(process.argv);
 
 readDiversity = function(path) {
   return fs.readFileSync(path, settings.encoding, function(err, data) {
@@ -80,18 +80,22 @@ if (push.release) {
   runCommand('git stash');
   gitPullBranch('master');
   gitPullBranch('develop');
-  try {
-    fs.statSync('.jscsrc');
-    runTest('gulp jscs');
-  } catch (error) {
-    shell.echo('INFO: Skipping JSCS. No .jscsrc file found.');
+  if (!push.justRelease) {
+    try {
+      fs.statSync('.jscsrc');
+      runTest('gulp jscs');
+    } catch (error) {
+      shell.echo('INFO: Skipping JSCS. No .jscsrc file found.');
+    }
+    runTest('gulp jshint');
+    runTest('gulp lint-css:style-names');
+    runTest('gulp lint-css:doiuse');
+    runTest('gulp translations-update-fail-on-incomplete');
+    runTest('gulp protractor:single-run');
+    runTest('gulp karma:single-run');
+  } else {
+    console.log('Just doing a release.');
   }
-  runTest('gulp jshint');
-  runTest('gulp lint-css:style-names');
-  runTest('gulp lint-css:doiuse');
-  runTest('gulp translations-update-fail-on-incomplete');
-  runTest('gulp protractor:single-run');
-  runTest('gulp karma:single-run');
   if (fs.existsSync('scripts.min.js')) {
     runCommand('git checkout scripts.min.js');
   }
