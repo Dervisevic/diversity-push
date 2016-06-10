@@ -142,23 +142,11 @@ if push.release
     runCommand 'gulp release'
     console.log '..."release" task done!'
 
-    # Check if you should finish release
-    askPush = false
-    finish = rls.question 'Would you like to finish the release? [Y/n]: '
-    if finish.toLowerCase() is 'n'
-      console.log "Don't forget to finish the release after you're done."
-    else
-      askPush = true
-      runCommand 'git flow release finish -m "' + newVersion + '" ' + newVersion
-      console.log 'Finishing git flow release.'
+    runCommand 'git flow release finish -m "' + newVersion + '" ' + newVersion
+    console.log 'Finishing git flow release.'
 
-    if askPush
-      shouldPush = rls.question 'Would you like to push the release? [Y/n]: '
-      if shouldPush.toLowerCase() is 'n'
-        console.log "Don't forget to push after you're done."
-      else
-        runCommand 'git push --all && git push --tags'
-        console.log 'Pushing release and tags.'
+    runCommand 'git push --all && git push --tags'
+    console.log 'Pushing release and tags.'
     console.log "Done!"
 else
   push.outputHelp()

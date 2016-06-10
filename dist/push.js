@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-var askPush, command, dirty, diversityData, error, exec, filelist, finish, fs, gitPullBranch, newDiversity, newVersion, position, push, readDiversity, rls, runCommand, runTest, settings, shell, shouldPush, updateString, versionArray, versionNumber, writeDiversity;
+var command, dirty, diversityData, error, exec, filelist, fs, gitPullBranch, newDiversity, newVersion, position, push, readDiversity, rls, runCommand, runTest, settings, shell, updateString, versionArray, versionNumber, writeDiversity;
 
 fs = require('fs');
 
@@ -141,24 +141,10 @@ if (push.release) {
   console.log('Running the "release" task...');
   runCommand('gulp release');
   console.log('..."release" task done!');
-  askPush = false;
-  finish = rls.question('Would you like to finish the release? [Y/n]: ');
-  if (finish.toLowerCase() === 'n') {
-    console.log("Don't forget to finish the release after you're done.");
-  } else {
-    askPush = true;
-    runCommand('git flow release finish -m "' + newVersion + '" ' + newVersion);
-    console.log('Finishing git flow release.');
-  }
-  if (askPush) {
-    shouldPush = rls.question('Would you like to push the release? [Y/n]: ');
-    if (shouldPush.toLowerCase() === 'n') {
-      console.log("Don't forget to push after you're done.");
-    } else {
-      runCommand('git push --all && git push --tags');
-      console.log('Pushing release and tags.');
-    }
-  }
+  runCommand('git flow release finish -m "' + newVersion + '" ' + newVersion);
+  console.log('Finishing git flow release.');
+  runCommand('git push --all && git push --tags');
+  console.log('Pushing release and tags.');
   console.log("Done!");
 } else {
   push.outputHelp();
