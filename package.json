@@ -24,9 +24,9 @@
     }
   ],
   "dependencies": {
-    "commander": "^2.5.1",
-    "readline-sync": "^0.4.10",
-    "shelljs": "^0.3.0"
+    "commander": "^2.9.0",
+    "readline-sync": "^1.4.3",
+    "shelljs": "^0.7.0"
   },
   "devDependencies": {
     "coffee-script": "^1.8.0",
